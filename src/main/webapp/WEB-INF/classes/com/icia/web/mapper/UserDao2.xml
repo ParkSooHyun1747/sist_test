@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace = "com.icia.web.dao.UserDao2">
+
+	<resultMap type="com.icia.web.model.User2" id="userResultMap">
+		<id column="USER_ID" property="userId" />
+	  	<result column="USER_PWD" property="userPwd" />
+	  	<result column="USER_NAME" property="userName" />
+	  	<result column="USER_EMAIL" property="userEmail" />
+	  	<result column="USER_HBD" property="userHbd"/>
+	  	<result column="USER_PHONE" property="userPhone"/>
+	  	<result column="USER_ADDRESS" property="userAddress"/>
+	  	<result column="STATUS" property="status" />
+	  	<result column="REG_DATE" property="regDate" />
+	</resultMap>
+	
+	<select id = "userSelect2" parameterType="String" resultMap = "userResultMap">
+		SELECT USER_ID, 
+		       NVL(USER_PWD, '') AS USER_PWD, 
+		       NVL(USER_NAME, '') AS USER_NAME, 
+		       NVL(USER_EMAIL, '') AS USER_EMAIL, 
+		       NVL(TO_CHAR(USER_HBD, 'YYYY.MM.DD'), '') AS USER_HBD, 
+		       NVL(USER_PHONE, '') AS USER_PHONE, 
+		       NVL(USER_ADDRESS, '') AS USER_ADDRESS, 
+		       NVL(STATUS, 'N') AS STATUS, 
+		       NVL(TO_CHAR(REG_DATE, 'YYYY.MM.DD HH24:MI:SS'), '') AS REG_DATE
+		FROM PRO_USER
+		WHERE USER_ID = #{value}
+	</select>
+	
+	<insert id="userInsert2" parameterType = "com.icia.web.model.User2">
+		INSERT INTO PRO_USER 
+		(
+		    USER_ID,
+		    USER_PWD,
+		    USER_NAME,
+		    USER_EMAIL,
+		    USER_HBD,
+		    USER_PHONE,
+		    USER_ADDRESS,
+		    STATUS,
+		    REG_DATE
+		) 
+		VALUES 
+		(
+		    #{userId},
+		    #{userPwd},
+		    #{userName},
+		    #{userEmail},
+		    #{userHbd},
+		    #{userPhone},
+		    #{userAddress},
+		    #{status},
+		    SYSDATE
+		)
+	</insert>
+	
+	
+</mapper>

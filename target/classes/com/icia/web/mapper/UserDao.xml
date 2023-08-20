@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 마이바티스(MyBatis)를 사용한 데이터베이스 연동 코드 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- mapper 태그로 해당 파일이 UserDao 클래스와 매핑되도록 설정 -->
+<mapper namespace="com.icia.web.dao.UserDao">
+
+<!-- 바티스가 xml 올라갈 때 실행이되고 유저다오랑 매핑이 돼 그리고 오버라이딩 된 userSelect는 -->
+	<!-- resultMap: 쿼리 결과를 객체에 매핑하는 역할 -->
+	<!-- com.icia.web.model.User 클래스의 객체에 TBL_USER 테이블의 컬럼 데이터를 매핑 -->
+	<resultMap type="com.icia.web.model.User" id="userResultMap">
+		<id column="USER_ID" property="userId" />
+		<result column="USER_PWD" property="userPwd" />
+		<result column="USER_NAME" property="userName" />
+		<result column="USER_EMAIL" property="userEmail" />
+		<result column="STATUS" property="status" />
+		<result column="REG_DATE" property="regDate" />
+	</resultMap>
+
+	<!-- resultMap으로는 위에서 정의한 userResultMap을 사용 -->
+	<!-- TBL_USER 테이블에서 USER_ID 컬럼 값이 파라미터로 전달된 값과 같은 레코드를 조회 -->
+	<select id="userSelect" parameterType="String" resultMap="userResultMap">
+		SELECT USER_ID,
+			   NVL(USER_PWD, '') AS USER_PWD,
+			   NVL(USER_NAME, '') AS USER_NAME,
+			   NVL(USER_EMAIL, '') AS USER_EMAIL,
+			   NVL(STATUS, 'N') AS STATUS,
+			   NVL(TO_CHAR(REG_DATE, 'YYYY.MM.DD HH24:MI:SS'), '') AS REG_DATE
+		FROM TBL_USER
+		WHERE USER_ID = #{value}
+	</select>
+
+	<!-- 회원가입(등록), 인서트 -->
+	<!-- insert, delete, update는 처리 건수로 들어감 -->
+	<!-- parameterType으로는 com.icia.web.model.User 클래스를 사용, 이 쿼리는 TBL_USER 테이블에 데이터를 삽입 -->
+	<insert id="userInsert" parameterType="com.icia.web.model.User">
+		INSERT INTO TBL_USER
+		(
+			USER_ID,
+			USER_PWD,
+			USER_NAME,
+			USER_EMAIL,
+			STATUS,
+			REG_DATE
+		)
+		VALUES
+		(
+			#{userId},
+			#{userPwd},
+			#{userName},
+			#{userEmail},
+			#{status},
+			SYSDATE
+		)
+	</insert>
+	
+		 
+	<!-- 회원 정보 수정, 업데이트1 -->
+	<update id="userUpdate" parameterType="com.icia.web.model.User">
+		UPDATE TBL_USER
+		SET USER_PWD = #{userPwd},
+			USER_NAME = #{userName},
+			USER_EMAIL = #{userEmail}
+		WHERE USER_ID=#{userId}
+	</update>
+	 
+</mapper>
+
+
+
+
+
+
+
